@@ -60,5 +60,6 @@ extern NSString * const RESideMenuDidClose;
 - (void)showFromPanGesture:(UIPanGestureRecognizer *)sender;
 - (void)hide;
 - (void)displayContentController:(UIViewController*)content;
+- (void)selectItemAtIndex:(NSInteger)idx;
 
 @end

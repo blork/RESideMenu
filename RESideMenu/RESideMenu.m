@@ -220,6 +220,8 @@ NSString * const RESideMenuDidClose = @"RESideMenuDidClose";
     [self.view bringSubviewToFront:_backgroundView];
     [self.view bringSubviewToFront:_tableView];
     [self.view bringSubviewToFront:_screenshotView];
+    
+    [self updateStatusBar];
 
     __typeof (&*self) __weak weakSelf = self;
     double delayInSeconds = 0.1;
@@ -241,6 +243,15 @@ NSString * const RESideMenuDidClose = @"RESideMenuDidClose";
     animation.removedOnCompletion = NO;
     [view.layer addAnimation:animation forKey:path];
 }
+
+- (void)selectItemAtIndex:(NSInteger)idx
+{
+    if (idx <= self.items.count) {
+        RESideMenuItem *item = _items[idx];
+        item.action(self, item);
+    }
+}
+
 
 #pragma mark -
 #pragma mark Private API
