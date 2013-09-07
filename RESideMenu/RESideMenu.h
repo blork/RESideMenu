@@ -51,6 +51,8 @@ extern NSString * const RESideMenuDidClose;
 @property (assign, readwrite, nonatomic) BOOL isShowing;
 @property (strong, readonly, nonatomic) REBackgroundView *backgroundView;
 
+@property (strong, nonatomic, readonly) UIViewController *topController;
+
 @property (strong, readonly, nonatomic) NSString *lastFieldInput;
 
 - (id)initWithItems:(NSArray *)items;

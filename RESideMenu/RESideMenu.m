@@ -45,7 +45,6 @@ NSString * const RESideMenuDidClose = @"RESideMenuDidClose";
 @property (assign, readwrite, nonatomic) CGSize originalSize;
 @property (strong, readonly, nonatomic) UIImageView *screenshotView;
 @property (strong, readonly, nonatomic) UITableView *tableView;
-@property (strong, nonatomic) UIViewController *topController;
 
 // Array containing menu (which are array of items)
 @property (strong, readwrite, nonatomic) NSMutableArray *menuStack;
@@ -214,7 +213,7 @@ NSString * const RESideMenuDidClose = @"RESideMenuDidClose";
     [self.view addSubview:content.view];
     [content didMoveToParentViewController:self];
     
-    self.topController = content;
+    _topController = content;
     
     [self.topController.view setNeedsDisplay];
     [self.view bringSubviewToFront:_backgroundView];
