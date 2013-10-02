@@ -30,6 +30,7 @@
 #import "UINavigationController+DelegateFixes.h"
 
 const int INTERSTITIAL_STEPS = 99;
+const int PARALLAX_PADDING = 100;
 
 NSString * const RESideMenuWillOpen = @"RESideMenuWillOpen";
 NSString * const RESideMenuDidOpen = @"RESideMenuDidOpen";
@@ -50,6 +51,8 @@ NSString * const RESideMenuDidClose = @"RESideMenuDidClose";
 @property (strong, readwrite, nonatomic) NSMutableArray *menuStack;
 @property (strong, readwrite, nonatomic) RESideMenuItem *backMenu;
 
+- (UIMotionEffectGroup*) motionEffectGroupForOffset:(CGFloat)offset;
+
 @end
 
 @implementation RESideMenu
@@ -68,6 +71,7 @@ NSString * const RESideMenuDidClose = @"RESideMenuDidClose";
         self.hideStatusBarArea = YES;
         self.openStatusBarStyle = UIStatusBarStyleDefault;
         self.menuStack = [NSMutableArray array];
+        self.isMotionEnabled = YES;
     }
     
     return self;
@@ -270,7 +274,7 @@ NSString * const RESideMenuDidClose = @"RESideMenuDidClose";
 - (REBackgroundView*)backgroundView
 {
     if(!_backgroundView) {        
-        _backgroundView = [[REBackgroundView alloc] initWithFrame:CGRectMake(0, -20, self.view.bounds.size.width, self.view.bounds.size.height + 20)];
+        _backgroundView = [[REBackgroundView alloc] initWithFrame:CGRectMake(-PARALLAX_PADDING, -20 - PARALLAX_PADDING, self.view.bounds.size.width + PARALLAX_PADDING*2, self.view.bounds.size.height + 20 + (PARALLAX_PADDING * 2))];
         _backgroundView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         _backgroundView.backgroundImage = _backgroundImage;
     }
@@ -280,7 +284,7 @@ NSString * const RESideMenuDidClose = @"RESideMenuDidClose";
 - (UITableView*)tableView
 {
     if(!_tableView) {
-        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(self.backgroundView.frame.origin.x, self.backgroundView.frame.origin.y, self.backgroundView.frame.size.width, self.backgroundView.frame.size.height)];
+        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(self.backgroundView.frame.origin.x + PARALLAX_PADDING, self.backgroundView.frame.origin.y + PARALLAX_PADDING, self.backgroundView.frame.size.width - PARALLAX_PADDING, self.backgroundView.frame.size.height - PARALLAX_PADDING)];
         _tableView.backgroundColor = [UIColor clearColor];
         _tableView.backgroundView = nil;
         _tableView.delegate = self;
@@ -304,6 +308,14 @@ NSString * const RESideMenuDidClose = @"RESideMenuDidClose";
     _screenshotView.layer.anchorPoint = CGPointMake(0, 0);
     _screenshotView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
     _originalSize = _screenshotView.frame.size;
+    
+    
+    if (self.isMotionEnabled && [UIInterpolatingMotionEffect class]) {
+        [self.tableView addMotionEffect:[self motionEffectGroupForOffset:15]];
+        [_screenshotView addMotionEffect:[self motionEffectGroupForOffset:25]];
+        [self.backgroundView addMotionEffect:[self motionEffectGroupForOffset:50]];
+    }
+
     
     
     // Add views
@@ -435,6 +447,20 @@ NSString * const RESideMenuDidClose = @"RESideMenuDidClose";
     } else {
         return self.horizontalLandscapeOffset;
     }
+}
+
+- (UIMotionEffectGroup*) motionEffectGroupForOffset:(CGFloat)offset
+{
+    UIInterpolatingMotionEffect *verticalMotionEffect = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"center.y" type:UIInterpolatingMotionEffectTypeTiltAlongVerticalAxis];
+    verticalMotionEffect.minimumRelativeValue = @(-offset);
+    verticalMotionEffect.maximumRelativeValue = @(offset);
+    UIInterpolatingMotionEffect *horizontalMotionEffect = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"center.x" type:UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis];
+    horizontalMotionEffect.minimumRelativeValue = @(-offset);
+    horizontalMotionEffect.maximumRelativeValue = @(offset);
+    
+    UIMotionEffectGroup *group = [UIMotionEffectGroup new];
+    group.motionEffects = @[horizontalMotionEffect, verticalMotionEffect];
+    return group;
 }
 
 #pragma mark -
