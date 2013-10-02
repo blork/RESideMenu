@@ -49,6 +49,7 @@ extern NSString * const RESideMenuDidClose;
 @property (assign, readwrite, nonatomic) UIStatusBarStyle openStatusBarStyle;
 @property (assign, readwrite, nonatomic) BOOL hideStatusBarArea;
 @property (assign, readwrite, nonatomic) BOOL isShowing;
+@property (assign, readwrite, nonatomic) BOOL isMotionEnabled;
 @property (strong, readonly, nonatomic) REBackgroundView *backgroundView;
 
 @property (strong, nonatomic, readonly) UIViewController *topController;
