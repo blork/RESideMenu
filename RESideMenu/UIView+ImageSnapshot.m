@@ -19,15 +19,8 @@
         UIGraphicsBeginImageContext(self.bounds.size);
     }
 
-    if ([self respondsToSelector:@selector(drawViewHierarchyInRect:)]) {        
-        NSInvocation* invoc = [NSInvocation invocationWithMethodSignature:
-                               [self methodSignatureForSelector:
-                                @selector(drawViewHierarchyInRect:)]];
-        [invoc setTarget:self];
-        [invoc setSelector:@selector(drawViewHierarchyInRect:)];
-        CGRect arg2 = self.bounds;
-        [invoc setArgument:&arg2 atIndex:2];
-        [invoc invoke];
+    if ([self respondsToSelector:@selector(drawViewHierarchyInRect:afterScreenUpdates:)]) {
+        [self drawViewHierarchyInRect:self.bounds afterScreenUpdates:YES];
     } else {
         [self.layer renderInContext:UIGraphicsGetCurrentContext()];
     }
