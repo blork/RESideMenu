@@ -102,7 +102,8 @@
     
     
     _sideMenu = [[RESideMenu alloc] initWithItems:@[homeItem, exploreItem, helpCenterItem, tagMakerItem, logOutItem]];
-    
+    _sideMenu.backgroundView.fillColor = [UIColor clearColor];
+    _sideMenu.backgroundView.opaque = NO;
     _sideMenu.verticalPortraitOffset = IS_WIDESCREEN ? 110 : 76;
     _sideMenu.verticalLandscapeOffset = 16;
     
@@ -114,7 +115,8 @@
     homeItem.action(_sideMenu, homeItem);
     
     self.window.rootViewController = _sideMenu;
-    self.window.backgroundColor = [UIColor whiteColor];
+    self.window.backgroundColor = [UIColor clearColor];
+    self.window.opaque = NO;
     [self.window makeKeyAndVisible];
     return YES;
 }
