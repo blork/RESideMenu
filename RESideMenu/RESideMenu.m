@@ -591,13 +591,13 @@ NSString * const RESideMenuDidClose = @"RESideMenuDidClose";
     cell.textLabel.font = self.font;
     cell.textLabel.textColor = self.textColor;
     cell.textLabel.highlightedTextColor = self.highlightedTextColor;
-    cell.textLabel.layer.shadowRadius = 1.0;
-    cell.textLabel.layer.shadowOpacity = 0.7;
+    cell.textLabel.layer.shadowRadius = 5.0;
+    cell.textLabel.layer.shadowOpacity = 0.5;
     cell.textLabel.layer.shadowOffset = CGSizeMake(0, 0);
     cell.textLabel.layer.shadowColor = [[UIColor blackColor] CGColor];
     cell.layer.masksToBounds = NO;
     cell.textLabel.layer.masksToBounds = NO;
-    [cell.textLabel addMotionEffect:[self shadowMotionEffectForOffset:15]];
+    [cell.textLabel addMotionEffect:[self shadowMotionEffectForOffset:12]];
 
     
     UITapGestureRecognizer *tapped;
