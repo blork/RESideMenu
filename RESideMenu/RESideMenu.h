@@ -52,7 +52,7 @@ extern NSString * const RESideMenuDidClose;
 @property (assign, readwrite, nonatomic) BOOL isShowing;
 @property (assign, readwrite, nonatomic) BOOL isMotionEnabled;
 @property (assign, readwrite, nonatomic) BOOL isShadowingEnabled;
-@property (strong, readwrite, nonatomic) UIView *backgroundView;
+@property (strong, readonly, nonatomic) REBackgroundView *backgroundView;
 
 @property (strong, nonatomic, readonly) UIViewController *topController;
 

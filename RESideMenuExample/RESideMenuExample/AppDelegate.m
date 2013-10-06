@@ -102,7 +102,7 @@
     
     
     _sideMenu = [[RESideMenu alloc] initWithItems:@[homeItem, exploreItem, helpCenterItem, tagMakerItem, logOutItem]];
-    _sideMenu.backgroundView.backgroundColor = [UIColor clearColor];
+    _sideMenu.backgroundView.fillColor = [UIColor clearColor];
     _sideMenu.backgroundView.opaque = NO;
     _sideMenu.verticalPortraitOffset = IS_WIDESCREEN ? 110 : 76;
     _sideMenu.verticalLandscapeOffset = 16;
