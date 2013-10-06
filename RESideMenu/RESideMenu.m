@@ -28,6 +28,7 @@
 #import "Evaluate.h"
 #import "UIView+ImageSnapshot.h"
 #import "UINavigationController+DelegateFixes.h"
+#import "UIView+RemovingMotionEffects.h"
 
 const int INTERSTITIAL_STEPS = 99;
 const int PARALLAX_PADDING = 100;
@@ -311,6 +312,13 @@ NSString * const RESideMenuDidClose = @"RESideMenuDidClose";
 {
     // Take a snapshot
     //
+    if ([UIInterpolatingMotionEffect class]) {
+        [self.tableView removeAllMotionEffects];
+        [self.screenshotView removeAllMotionEffects];
+        [self.backgroundView removeAllMotionEffects];
+    }
+    
+    
     _screenshotView = [[UIImageView alloc] initWithFrame:CGRectNull];
     _screenshotView.image = [self.topController.view snapshotImage];
     _screenshotView.frame = CGRectMake(0, 0, _screenshotView.image.size.width, _screenshotView.image.size.height);
@@ -405,6 +413,12 @@ NSString * const RESideMenuDidClose = @"RESideMenuDidClose";
 
 - (void)restoreFromRect:(CGRect)rect
 {
+    [UIView animateWithDuration:0.5f animations:^{
+        [self.screenshotView removeAllMotionEffects];
+        [self.tableView removeAllMotionEffects];
+        [self.backgroundView removeAllMotionEffects];
+    }];
+    
     _screenshotView.userInteractionEnabled = NO;
     
     [CATransaction begin];
@@ -602,6 +616,10 @@ NSString * const RESideMenuDidClose = @"RESideMenuDidClose";
     cell.textLabel.font = self.font;
     cell.textLabel.textColor = self.textColor;
     cell.textLabel.highlightedTextColor = self.highlightedTextColor;
+    
+    if ([UIInterpolatingMotionEffect class]) {
+        [cell.textLabel removeAllMotionEffects];
+    }
     
     if (self.isShadowingEnabled) {
         cell.textLabel.layer.shadowRadius = 6.0;

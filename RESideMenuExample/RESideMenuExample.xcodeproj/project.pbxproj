@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		22494A991801BE0B0031ED80 /* UIView+RemovingMotionEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = 22494A981801BE0B0031ED80 /* UIView+RemovingMotionEffects.m */; };
 		22778077179D757100A68874 /* UIView+ImageSnapshot.m in Sources */ = {isa = PBXBuildFile; fileRef = 22778076179D757100A68874 /* UIView+ImageSnapshot.m */; };
 		22F47C73179F10E500F544CC /* UINavigationController+DelegateFixes.m in Sources */ = {isa = PBXBuildFile; fileRef = 22F47C72179F10E500F544CC /* UINavigationController+DelegateFixes.m */; };
 		30D7C396176B71A500FB3018 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30D7C395176B71A500FB3018 /* UIKit.framework */; };
@@ -33,6 +34,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		22494A971801BE0B0031ED80 /* UIView+RemovingMotionEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+RemovingMotionEffects.h"; sourceTree = "<group>"; };
+		22494A981801BE0B0031ED80 /* UIView+RemovingMotionEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+RemovingMotionEffects.m"; sourceTree = "<group>"; };
 		22778075179D757100A68874 /* UIView+ImageSnapshot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+ImageSnapshot.h"; sourceTree = "<group>"; };
 		22778076179D757100A68874 /* UIView+ImageSnapshot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+ImageSnapshot.m"; sourceTree = "<group>"; };
 		22F47C71179F10E500F544CC /* UINavigationController+DelegateFixes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UINavigationController+DelegateFixes.h"; sourceTree = "<group>"; };
@@ -164,6 +167,8 @@
 				22F47C72179F10E500F544CC /* UINavigationController+DelegateFixes.m */,
 				30DBD539176F698A00CF3CB3 /* RESideMenu.h */,
 				30DBD53A176F698A00CF3CB3 /* RESideMenu.m */,
+				22494A971801BE0B0031ED80 /* UIView+RemovingMotionEffects.h */,
+				22494A981801BE0B0031ED80 /* UIView+RemovingMotionEffects.m */,
 				30DBD52B176BB3FC00CF3CB3 /* RESideMenuCell.h */,
 				30DBD52C176BB3FC00CF3CB3 /* RESideMenuCell.m */,
 				30DBD52E176BB88700CF3CB3 /* RESideMenuItem.h */,
@@ -243,6 +248,7 @@
 			files = (
 				30D7C3A2176B71A500FB3018 /* main.m in Sources */,
 				22F47C73179F10E500F544CC /* UINavigationController+DelegateFixes.m in Sources */,
+				22494A991801BE0B0031ED80 /* UIView+RemovingMotionEffects.m in Sources */,
 				30D7C3A6176B71A500FB3018 /* AppDelegate.m in Sources */,
 				30D7C3C8176B831000FB3018 /* AccelerationAnimation.m in Sources */,
 				30D7C3B4176B71CD00FB3018 /* DemoViewController.m in Sources */,
