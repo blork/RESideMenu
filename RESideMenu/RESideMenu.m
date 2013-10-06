@@ -280,12 +280,13 @@ NSString * const RESideMenuDidClose = @"RESideMenuDidClose";
     [self minimizeFromRect:CGRectMake(0, 0, _originalSize.width, _originalSize.height)];
 }
 
-- (REBackgroundView*)backgroundView
+- (UIView*)backgroundView
 {
     if(!_backgroundView) {        
-        _backgroundView = [[REBackgroundView alloc] initWithFrame:CGRectMake(-PARALLAX_PADDING, -20 - PARALLAX_PADDING, self.view.bounds.size.width + PARALLAX_PADDING*2, self.view.bounds.size.height + 20 + (PARALLAX_PADDING * 2))];
-        _backgroundView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-        _backgroundView.backgroundImage = _backgroundImage;
+        REBackgroundView *view = [[REBackgroundView alloc] initWithFrame:CGRectMake(-PARALLAX_PADDING, -20 - PARALLAX_PADDING, self.view.bounds.size.width + PARALLAX_PADDING*2, self.view.bounds.size.height + 20 + (PARALLAX_PADDING * 2))];
+        view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        view.backgroundImage = _backgroundImage;
+        _backgroundView = view;
     }
     return _backgroundView;
 }
