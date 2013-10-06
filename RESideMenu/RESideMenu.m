@@ -72,6 +72,8 @@ NSString * const RESideMenuDidClose = @"RESideMenuDidClose";
         self.openStatusBarStyle = UIStatusBarStyleDefault;
         self.menuStack = [NSMutableArray array];
         self.isMotionEnabled = YES;
+        self.isShadowingEnabled = YES;
+        self.shadowColor = [UIColor blackColor];
     }
     
     return self;
@@ -314,20 +316,23 @@ NSString * const RESideMenuDidClose = @"RESideMenuDidClose";
     _screenshotView.frame = CGRectMake(0, 0, _screenshotView.image.size.width, _screenshotView.image.size.height);
     _screenshotView.userInteractionEnabled = YES;
     _screenshotView.layer.anchorPoint = CGPointMake(0, 0);
-    _screenshotView.layer.shadowRadius = 20;
-    _screenshotView.layer.shadowOpacity = 0.4;
-    _screenshotView.layer.shadowOffset = CGSizeMake(0, 0);
-    _screenshotView.layer.shadowColor = [[UIColor blackColor] CGColor];
-    _screenshotView.layer.shadowPath = [UIBezierPath bezierPathWithRect:_screenshotView.bounds].CGPath;
-
     _screenshotView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
     _originalSize = _screenshotView.frame.size;
-    
+
+    if (self.isShadowingEnabled) {
+        _screenshotView.layer.shadowRadius = 20;
+        _screenshotView.layer.shadowOpacity = 0.4;
+        _screenshotView.layer.shadowOffset = CGSizeMake(0, 0);
+        _screenshotView.layer.shadowColor = [self.shadowColor CGColor];
+        _screenshotView.layer.shadowPath = [UIBezierPath bezierPathWithRect:_screenshotView.bounds].CGPath;
+        if (self.isMotionEnabled && [UIInterpolatingMotionEffect class]) {
+            [self.screenshotView addMotionEffect:[self shadowMotionEffectForOffset:25]];
+        }
+    }
     
     if (self.isMotionEnabled && [UIInterpolatingMotionEffect class]) {
         [self.tableView addMotionEffect:[self motionEffectGroupForOffset:10]];
         [self.screenshotView addMotionEffect:[self motionEffectGroupForOffset:20]];
-        [self.screenshotView addMotionEffect:[self shadowMotionEffectForOffset:25]];
         [self.backgroundView addMotionEffect:[self motionEffectGroupForOffset:30]];
     }
 
@@ -579,6 +584,12 @@ NSString * const RESideMenuDidClose = @"RESideMenuDidClose";
     return self.itemHeight;
 }
 
+-(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [cell.textLabel sizeToFit];
+    cell.textLabel.layer.shadowPath = [UIBezierPath bezierPathWithRect:CGRectOffset(cell.textLabel.bounds, 0, self.itemHeight/4)].CGPath;
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSString *cellIdentifier = @"RESideMenuCell";
@@ -591,13 +602,18 @@ NSString * const RESideMenuDidClose = @"RESideMenuDidClose";
     cell.textLabel.font = self.font;
     cell.textLabel.textColor = self.textColor;
     cell.textLabel.highlightedTextColor = self.highlightedTextColor;
-    cell.textLabel.layer.shadowRadius = 5.0;
-    cell.textLabel.layer.shadowOpacity = 0.5;
-    cell.textLabel.layer.shadowOffset = CGSizeMake(0, 0);
-    cell.textLabel.layer.shadowColor = [[UIColor blackColor] CGColor];
-    cell.layer.masksToBounds = NO;
-    cell.textLabel.layer.masksToBounds = NO;
-    [cell.textLabel addMotionEffect:[self shadowMotionEffectForOffset:12]];
+    
+    if (self.isShadowingEnabled) {
+        cell.textLabel.layer.shadowRadius = 6.0;
+        cell.textLabel.layer.shadowOpacity = 0.1;
+        cell.textLabel.layer.shadowOffset = CGSizeMake(0, 0);
+        cell.textLabel.layer.shadowColor = [self.shadowColor CGColor];
+        cell.layer.masksToBounds = NO;
+        cell.textLabel.layer.masksToBounds = NO;
+        if (self.isMotionEnabled && [UIInterpolatingMotionEffect class]) {
+            [cell.textLabel addMotionEffect:[self shadowMotionEffectForOffset:12]];
+        }
+    }
 
     
     UITapGestureRecognizer *tapped;

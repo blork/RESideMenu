@@ -44,12 +44,14 @@ extern NSString * const RESideMenuDidClose;
 @property (assign, readwrite, nonatomic) CGFloat itemHeight;
 @property (strong, readwrite, nonatomic) UIFont *font;
 @property (strong, readwrite, nonatomic) UIColor *textColor;
+@property (strong, readwrite, nonatomic) UIColor *shadowColor;
 @property (strong, readwrite, nonatomic) UIColor *highlightedTextColor;
 @property (strong, readwrite, nonatomic) UIImage *backgroundImage;
 @property (assign, readwrite, nonatomic) UIStatusBarStyle openStatusBarStyle;
 @property (assign, readwrite, nonatomic) BOOL hideStatusBarArea;
 @property (assign, readwrite, nonatomic) BOOL isShowing;
 @property (assign, readwrite, nonatomic) BOOL isMotionEnabled;
+@property (assign, readwrite, nonatomic) BOOL isShadowingEnabled;
 @property (strong, readonly, nonatomic) REBackgroundView *backgroundView;
 
 @property (strong, nonatomic, readonly) UIViewController *topController;
