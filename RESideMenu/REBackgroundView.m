@@ -55,8 +55,8 @@
     if (self.backgroundImage)
         return;
     
-    if(self.backgroundColor) {
-        [self.backgroundColor setFill];
+    if(_fillColor) {
+        [_fillColor setFill];
         UIRectFill(rect);
     } else {
         [self drawGradientInRect:rect];
