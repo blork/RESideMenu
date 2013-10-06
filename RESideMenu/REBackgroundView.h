@@ -29,5 +29,6 @@
 
 @property (strong, readwrite, nonatomic) UIImage *backgroundImage;
 @property (strong, nonatomic) UIColor *fillColor;
+@property (copy, nonatomic) void (^drawRectBlock)(CGRect rect);
 
 @end
