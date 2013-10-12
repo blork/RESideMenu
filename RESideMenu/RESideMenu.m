@@ -185,7 +185,7 @@ NSString * const RESideMenuDidClose = @"RESideMenuDidClose";
     
     _showFromPan = YES;
 	if (sender.state == UIGestureRecognizerStateBegan) {
-        if (_isShowing || translation.x<=0)
+        if (_isShowing || translation.x < 0)
             return;
         
         _isShowing = YES;
