@@ -287,6 +287,8 @@ NSString * const RESideMenuDidClose = @"RESideMenuDidClose";
         _backgroundView = [[REBackgroundView alloc] initWithFrame:CGRectMake(-PARALLAX_PADDING, -20 - PARALLAX_PADDING, self.view.bounds.size.width + PARALLAX_PADDING*2, self.view.bounds.size.height + 20 + (PARALLAX_PADDING * 2))];
         _backgroundView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         _backgroundView.backgroundImage = _backgroundImage;
+        _backgroundView.backgroundColor = _backgroundColor;
+        _backgroundView.drawRectBlock = _backgroundDrawRectBlock;
     }
     return _backgroundView;
 }

@@ -102,7 +102,6 @@
     
     
     _sideMenu = [[RESideMenu alloc] initWithItems:@[homeItem, exploreItem, helpCenterItem, tagMakerItem, logOutItem]];
-    _sideMenu.backgroundView.opaque = NO;
     _sideMenu.verticalPortraitOffset = IS_WIDESCREEN ? 110 : 76;
     _sideMenu.verticalLandscapeOffset = 16;
     
@@ -110,7 +109,7 @@
     
     _sideMenu.openStatusBarStyle = UIStatusBarStyleBlackTranslucent;
     
-    _sideMenu.backgroundView.drawRectBlock = ^(CGRect rect){
+    _sideMenu.backgroundDrawRectBlock = ^(CGRect rect){
         //// General Declarations
         CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
         CGContextRef context = UIGraphicsGetCurrentContext();

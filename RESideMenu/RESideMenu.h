@@ -47,6 +47,9 @@ extern NSString * const RESideMenuDidClose;
 @property (strong, readwrite, nonatomic) UIColor *shadowColor;
 @property (strong, readwrite, nonatomic) UIColor *highlightedTextColor;
 @property (strong, readwrite, nonatomic) UIImage *backgroundImage;
+@property (strong, readwrite, nonatomic) UIColor *backgroundColor;
+@property (copy, readwrite, nonatomic) void (^backgroundDrawRectBlock)(CGRect rect);
+
 @property (assign, readwrite, nonatomic) UIStatusBarStyle openStatusBarStyle;
 @property (assign, readwrite, nonatomic) BOOL hideStatusBarArea;
 @property (assign, readwrite, nonatomic) BOOL isShowing;
