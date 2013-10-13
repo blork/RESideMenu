@@ -415,11 +415,13 @@ NSString * const RESideMenuDidClose = @"RESideMenuDidClose";
 
 - (void)restoreFromRect:(CGRect)rect
 {
-    [UIView animateWithDuration:0.5f animations:^{
-        [self.screenshotView removeAllMotionEffects];
-        [self.tableView removeAllMotionEffects];
-        [self.backgroundView removeAllMotionEffects];
-    }];
+    if ([UIInterpolatingMotionEffect class]) {
+        [UIView animateWithDuration:0.5f animations:^{
+            [self.screenshotView removeAllMotionEffects];
+            [self.tableView removeAllMotionEffects];
+            [self.backgroundView removeAllMotionEffects];
+        }];
+    }
     
     _screenshotView.userInteractionEnabled = NO;
     
