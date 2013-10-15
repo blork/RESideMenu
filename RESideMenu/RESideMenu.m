@@ -321,6 +321,7 @@ NSString * const RESideMenuDidClose = @"RESideMenuDidClose";
     }
     
     
+    _tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.verticalOffset)];
     _screenshotView = [[UIImageView alloc] initWithFrame:CGRectNull];
     _screenshotView.image = [self.topController.view snapshotImage];
     _screenshotView.frame = CGRectMake(0, 0, _screenshotView.image.size.width, _screenshotView.image.size.height);
