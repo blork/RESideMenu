@@ -76,6 +76,10 @@
     
     _parallaxContentMinimumRelativeValue = @(-25);
     _parallaxContentMaximumRelativeValue = @(25);
+    
+    _springEnabled = YES;
+    _springDamping = 0.7;
+    _springVelocity = 0.1;
 }
 
 - (id)initWithContentViewController:(UIViewController *)contentViewController menuViewController:(UIViewController *)menuViewController
@@ -183,17 +187,16 @@
         [self.menuViewController beginAppearanceTransition:YES animated:YES];
     }
     
-    [UIView animateWithDuration:self.animationDuration animations:^{
+    void (^animations)(void) = ^{
         if (self.scaleContentView) {
             self.contentViewController.view.transform = CGAffineTransformMakeScale(self.contentViewScaleValue, self.contentViewScaleValue);
         }
         self.contentViewController.view.center = CGPointMake((UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation) ? self.contentViewInLandscapeOffsetCenterX : self.contentViewInPortraitOffsetCenterX), self.contentViewController.view.center.y);
         self.menuViewController.view.alpha = 1.0f;
         self.menuViewController.view.transform = CGAffineTransformIdentity;
-        if (self.scaleBackgroundImageView)
-            self.backgroundImageView.transform = CGAffineTransformIdentity;
-            
-    } completion:^(BOOL finished) {
+    };
+    
+    void (^completion)(BOOL) = ^(BOOL finished) {
         [self addContentViewControllerMotionEffects];
         
         [self.contentViewController endAppearanceTransition];
@@ -204,7 +207,29 @@
         }
         
         self.visible = YES;
-    }];
+    };
+    
+    if (self.springEnabled && [UIView respondsToSelector:@selector(animateWithDuration:delay:usingSpringWithDamping:initialSpringVelocity:options:animations:completion:)]) {
+        [UIView animateWithDuration:self.animationDuration
+                              delay:0
+             usingSpringWithDamping:self.springDamping
+              initialSpringVelocity:self.springVelocity
+                            options:UIViewAnimationOptionCurveLinear
+                         animations:animations
+                         completion:completion];
+    } else {
+        [UIView animateWithDuration:self.animationDuration animations:animations completion:completion];
+    }
+    
+    if (self.scaleBackgroundImageView) {
+        [UIView animateWithDuration:self.animationDuration
+                              delay:0
+                            options:UIViewAnimationOptionCurveEaseOut
+                         animations:^{
+                             self.backgroundImageView.transform = CGAffineTransformIdentity;
+                         } completion:nil];
+    }
+
     
     [self updateStatusBar];
 }
@@ -222,23 +247,22 @@
         [self.contentViewController beginAppearanceTransition:YES animated:YES];
     }
     
-    [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
-    [UIView animateWithDuration:self.animationDuration animations:^{
+    void (^animations)(void) = ^{
         self.contentViewController.view.transform = CGAffineTransformIdentity;
         self.contentViewController.view.frame = self.view.bounds;
         self.menuViewController.view.transform = CGAffineTransformMakeScale(1.5f, 1.5f);
         self.menuViewController.view.alpha = 0;
-        if (self.scaleBackgroundImageView) {
-            self.backgroundImageView.transform = CGAffineTransformMakeScale(1.7f, 1.7f);
-        }
+        
         if (self.parallaxEnabled) {
             IF_IOS7_OR_GREATER(
-               for (UIMotionEffect *effect in self.contentViewController.view.motionEffects) {
-                   [self.contentViewController.view removeMotionEffect:effect];
-               }
-            );
+                               for (UIMotionEffect *effect in self.contentViewController.view.motionEffects) {
+                                   [self.contentViewController.view removeMotionEffect:effect];
+                               }
+                               );
         }
-    } completion:^(BOOL finished) {
+    };
+    
+    void (^completion)(BOOL) = ^(BOOL finished) {
         [[UIApplication sharedApplication] endIgnoringInteractionEvents];
         
         [self.menuViewController endAppearanceTransition];
@@ -247,7 +271,28 @@
         if (!self.visible && [self.delegate conformsToProtocol:@protocol(RESideMenuDelegate)] && [self.delegate respondsToSelector:@selector(sideMenu:didHideMenuViewController:)]) {
             [self.delegate sideMenu:self didHideMenuViewController:self.menuViewController];
         }
-    }];
+    };
+    
+    if (self.springEnabled && [UIView respondsToSelector:@selector(animateWithDuration:delay:usingSpringWithDamping:initialSpringVelocity:options:animations:completion:)]) {
+        [UIView animateWithDuration:self.animationDuration
+                              delay:0
+             usingSpringWithDamping:self.springDamping
+              initialSpringVelocity:self.springVelocity
+                            options:UIViewAnimationOptionCurveLinear
+                         animations:animations
+                         completion:completion];
+    } else {
+        [UIView animateWithDuration:self.animationDuration animations:animations completion:completion];
+    }
+    
+    
+    if (self.scaleBackgroundImageView) {
+        [UIView animateWithDuration:self.animationDuration animations:^{
+            self.backgroundImageView.transform = CGAffineTransformMakeScale(1.7f, 1.7f);
+        }];
+    }
+
+    
     self.visible = NO;
     [self updateStatusBar];
 }
