@@ -134,25 +134,21 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self.contentViewController beginAppearanceTransition:YES animated:animated];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self.contentViewController endAppearanceTransition];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    [self.contentViewController beginAppearanceTransition:NO animated:animated];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
-    [self.contentViewController endAppearanceTransition];
 }
 
 #pragma mark -
@@ -191,16 +187,17 @@
         if (self.scaleContentView) {
             self.contentViewController.view.transform = CGAffineTransformMakeScale(self.contentViewScaleValue, self.contentViewScaleValue);
         }
-        self.contentViewController.view.center = CGPointMake((UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation) ? self.contentViewInLandscapeOffsetCenterX : self.contentViewInPortraitOffsetCenterX), self.contentViewController.view.center.y);
+        self.contentViewController.view.center = CGPointMake((UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]) ? self.contentViewInLandscapeOffsetCenterX : self.contentViewInPortraitOffsetCenterX), self.contentViewController.view.center.y);
+
         self.menuViewController.view.alpha = 1.0f;
         self.menuViewController.view.transform = CGAffineTransformIdentity;
+        if (self.scaleBackgroundImageView)
+            self.backgroundImageView.transform = CGAffineTransformIdentity;
+            
     };
     
-    void (^completion)(BOOL) = ^(BOOL finished) {
+    void (^completion)(BOOL) = ^(BOOL finished){
         [self addContentViewControllerMotionEffects];
-        
-        [self.contentViewController endAppearanceTransition];
-        [self.menuViewController endAppearanceTransition];
         
         if (!self.visible && [self.delegate conformsToProtocol:@protocol(RESideMenuDelegate)] && [self.delegate respondsToSelector:@selector(sideMenu:didShowMenuViewController:)]) {
             [self.delegate sideMenu:self didShowMenuViewController:self.menuViewController];
@@ -242,11 +239,7 @@
     
     [self.contentButton removeFromSuperview];
     
-    if ([(UIGestureRecognizer*)self.view.gestureRecognizers.lastObject state] != UIGestureRecognizerStateEnded) {
-        [self.menuViewController beginAppearanceTransition:NO animated:YES];
-        [self.contentViewController beginAppearanceTransition:YES animated:YES];
-    }
-    
+    [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
     void (^animations)(void) = ^{
         self.contentViewController.view.transform = CGAffineTransformIdentity;
         self.contentViewController.view.frame = self.view.bounds;
@@ -255,18 +248,15 @@
         
         if (self.parallaxEnabled) {
             IF_IOS7_OR_GREATER(
-                               for (UIMotionEffect *effect in self.contentViewController.view.motionEffects) {
-                                   [self.contentViewController.view removeMotionEffect:effect];
-                               }
-                               );
+               for (UIMotionEffect *effect in self.contentViewController.view.motionEffects) {
+                   [self.contentViewController.view removeMotionEffect:effect];
+               }
+            );
         }
     };
     
     void (^completion)(BOOL) = ^(BOOL finished) {
         [[UIApplication sharedApplication] endIgnoringInteractionEvents];
-        
-        [self.menuViewController endAppearanceTransition];
-        [self.contentViewController endAppearanceTransition];
         
         if (!self.visible && [self.delegate conformsToProtocol:@protocol(RESideMenuDelegate)] && [self.delegate respondsToSelector:@selector(sideMenu:didHideMenuViewController:)]) {
             [self.delegate sideMenu:self didHideMenuViewController:self.menuViewController];
@@ -384,9 +374,6 @@
         self.menuViewController.view.frame = self.view.bounds;
         [self addContentButton];
         [self.view.window endEditing:YES];
-        
-        [self.contentViewController beginAppearanceTransition:self.visible animated:YES];
-        [self.menuViewController beginAppearanceTransition:!self.visible animated:YES];
     }
     
     if (recognizer.state == UIGestureRecognizerStateBegan || recognizer.state == UIGestureRecognizerStateChanged) {
@@ -457,6 +444,22 @@
     [self addContentViewControllerMotionEffects];
 }
 
+- (void)setContentViewController:(UIViewController *)contentViewController animated:(BOOL)animated
+{
+    if (!animated) {
+        [self setContentViewController:contentViewController];
+    } else {
+        contentViewController.view.alpha = 0;
+        [self.contentViewController.view addSubview:contentViewController.view];
+        [UIView animateWithDuration:self.animationDuration animations:^{
+            contentViewController.view.alpha = 1;
+        } completion:^(BOOL finished) {
+            [contentViewController.view removeFromSuperview];
+            [self setContentViewController:contentViewController];
+        }];
+    }
+}
+
 - (void)setMenuViewController:(UIViewController *)menuViewController
 {
     if (!_menuViewController) {
@@ -476,10 +479,17 @@
 
 - (BOOL)shouldAutorotate
 {
-    if (self.visible)
-        return NO;
-    
     return self.contentViewController.shouldAutorotate;
+}
+
+- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
+{
+    if (self.visible) {
+        self.contentViewController.view.transform = CGAffineTransformIdentity;
+        self.contentViewController.view.frame = self.view.bounds;
+        self.contentViewController.view.transform = CGAffineTransformMakeScale(self.contentViewScaleValue, self.contentViewScaleValue);
+        self.contentViewController.view.center = CGPointMake((UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation) ? self.contentViewInLandscapeOffsetCenterX : self.contentViewInPortraitOffsetCenterX), self.contentViewController.view.center.y);
+    }
 }
 
 #pragma mark -
